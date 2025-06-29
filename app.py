@@ -5,8 +5,16 @@ import nltk
 import io
 import random
 
-# Download NLTK punkt if not already present
-nltk.download('punkt')
+# Download NLTK data with error handling
+try:
+    nltk.download('punkt', quiet=True)
+    nltk.download('punkt_tab', quiet=True)
+    nltk.download('averaged_perceptron_tagger', quiet=True)
+    nltk.download('maxent_ne_chunker', quiet=True)
+    nltk.download('words', quiet=True)
+    nltk.download('stopwords', quiet=True)
+except Exception as e:
+    st.warning(f"NLTK data download issue: {e}. Some features may not work properly.")
 
 st.set_page_config(page_title="Smart Research Assistant", layout="wide")
 st.title("Smart Assistant for Research Summarization")
@@ -62,9 +70,14 @@ if uploaded_file:
                 result = qa_model(question=user_question, context=context)
                 answer = result['answer']
                 # Find the sentence containing the answer for justification
-                from nltk.tokenize import sent_tokenize
-                sentences = sent_tokenize(context)
-                justification = next((s for s in sentences if answer in s), "(Reference not found in preview)")
+                try:
+                    from nltk.tokenize import sent_tokenize
+                    sentences = sent_tokenize(context)
+                    justification = next((s for s in sentences if answer in s), "(Reference not found in preview)")
+                except:
+                    # Fallback: simple sentence splitting if NLTK fails
+                    sentences = [s.strip() for s in context.split('.') if s.strip()]
+                    justification = next((s for s in sentences if answer in s), "(Reference not found in preview)")
                 st.success(f"**Answer:** {answer}")
                 st.markdown(f"**Justification:** _{justification}_")
     else:
