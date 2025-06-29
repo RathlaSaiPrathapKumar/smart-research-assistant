@@ -1,4 +1,2 @@
 build-essential
-python3-dev
-nltk-data
-python3-nltk 
+python3-dev 

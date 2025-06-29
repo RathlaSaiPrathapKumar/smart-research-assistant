@@ -14,7 +14,7 @@ port = $PORT\n\
 " > ~/.streamlit/config.toml
 
 # Download required NLTK data
-python -c "import nltk; nltk.download('punkt'); nltk.download('punkt_tab'); nltk.download('averaged_perceptron_tagger'); nltk.download('maxent_ne_chunker'); nltk.download('words'); nltk.download('stopwords')"
+python -c "import nltk; nltk.download('punkt', quiet=True); nltk.download('punkt_tab', quiet=True)"
 
 # Install Python dependencies
 pip install -r requirements.txt
